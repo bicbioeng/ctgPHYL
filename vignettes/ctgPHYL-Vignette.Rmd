@@ -1,0 +1,259 @@
+---
+title: "Using ctgPHYL"
+author: "Carrie Minette"
+date: "May 23, 2019"
+output:
+  html_document: default
+  pdf_document: default
+vignette: >
+  %\VignetteIndexEntry{ctgPHYL} 
+  %\VignetteEncoding{UTF-8} 
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+ctgPHYL is an R package that combines a variety of visualization packages. By installing this package, users have a streamlined, simplified way to build trees with these packages using one function call with a single dataset and the desired visualization package name as a parameter. Currently supported packages are:
+
+- timescape
+- cellscape
+- mapscape
+
+
+# Installing ctgPHYL
+
+## Installing R
+
+To run ctgPHYL requires R 3.4.0 or higher.  To install R, follow the directions for your system on the website, https://cloud.r-project.org. RStudio, an IDE (interactive development environment) is not required, but is highly recommended.  To download RStudio, please visit https://www.rstudio.com/products/rstudio/download3/ and download and install the appropriate version for your system.  For any additional help, please visit https://www.rstudio.com/online-learning/ for help with R, or use the help menu in RStudio.
+
+## Installing CRAN Dependencies
+
+After installing R, install the CRAN packages required by ctgPHYL using command below in R, or use the Install button in the Packages pane in RStudio to install the following packages: 
+ggm, ggplot2, igraph, irlba, maptpx, VGAM
+
+```{r, eval=FALSE}
+install.packages("igraph")
+```
+
+To optionally save cellscape, timescape, and mapscape plots as self-contained files, the  htmlwidgets package must also be installed.
+
+```{r optional, eval=FALSE}
+install.packages("htmlwidgets")
+```
+
+
+## Installing Bioconductor
+
+ctgPHYL requires Bioconductor 3.5 or higher.  For more information on Bioconductor, please see their website at https://bioconductor.org.  To install Bioconductor, run the following commands in R or RStudio:
+
+```{r, eval=FALSE}
+# For R version >= 3.5
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
+
+# For R version < 3.5
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+```
+
+Once Bioconductor is installed, it can be used to install some of the other dependencies, as follows:
+
+```{r, eval=FALSE}
+BiocManager::install(c("cellscape", "timescape", "mapscape"))
+```
+
+## Installing the ctgPHYL package
+
+The preceding steps ensure that all the dependencies are installed, which means we can now install ctgPHYL. Currently, ctgPHYL is a private project, and not available on any public repository, so to install ctgPHYL in RStudio, click on the Packages tab and click "Install" to open the Install Packages window. Under "Install From:" select "Package Archive File (.tgz; .tar.gz)" from the dropdown box, and if necessary click "Browse".  Then find the saved file "ctgPHYL_(version number).tar.gz" on your computer, select it, and click "Install".  Alternatively, run the following command in R, replacing "/path/to/ctgPHYL" with the full file path, including the file name.
+
+```{r, eval=FALSE}
+install.packages("/path/to/ctgPHYL", repos = NULL, 
+                  type = "source")
+```
+
+
+After installing, attach the ctgPHYL package with the following command:
+
+```{r loadCTG, message=FALSE, warning=FALSE, results='hide'}
+library(ctgPHYL)
+```
+
+
+# Preparing a ctgPHYLset object
+
+The ctgPHYL workflow is based around a single data class, Details for loading the data for and constructing an example ctgPHYLset object suitable for this vignette can be found in the following section.
+
+## Loading the Data
+
+A ctgPHYLset object that will support all of the tree types in the ctgPHYL requires a variety of data types, as each tree type has specific requirements.  For this vignette, we will construct a toy object, using examples provided in the vignettes for each tree package.  Note that these data do not necessarily correlate to one another in any way and are strictly for example purposes. 
+
+```{r loadRaw, message=FALSE, warning=FALSE, results='hide'}
+# load data for cellscape
+cs_tree_edges <- read.csv(system.file("extdata", "cnv_tree_edges.csv", 
+                                     package = "cellscape"))
+cs_cnv_data <- read.csv(system.file("extdata", "cnv_data.csv",
+                                    package = "cellscape"))
+cs_sc_annot <- read.csv(system.file("extdata", "cnv_annots.tsv",
+                                 package = "cellscape"), sep="\t")
+cs_clone_colours <- data.frame(clone_id = c("1","2","3"), 
+                              colour = c("7fc97f", "beaed4", "fdc086"))
+# load data for timescape
+ts_tree_edges <- read.csv(system.file("extdata", "AML_tree_edges.csv",
+                                      package = "timescape"))
+ts_clonal_prev <- read.csv(system.file("extdata", "AML_clonal_prev.csv",
+                                       package = "timescape"))
+ts_mutations <- read.csv(system.file("extdata", "AML_mutations.csv",
+                                     package = "timescape"))
+ts_perturbations <- data.frame(pert_name = c("Chemotherapy"),
+                               prev_tp = c("Diagnosis"))
+
+# load data for mapscape
+ms_clonal_prev <- read.csv(system.file("extdata", "A21_clonal_prev.csv",
+                                       package = "mapscape"))
+ms_mutations <- read.csv(system.file("extdata", "A21_mutations.csv",
+                                  package = "mapscape"))
+ms_sample_locations <- read.csv(system.file("extdata", "A21_sample_locations.csv", 
+                                            package = "mapscape"))
+ms_tree_edges <- read.csv(system.file("extdata", "A21_tree.csv",
+                                      package = "mapscape"))
+
+ms_img_ref <- system.file("extdata", "A21_anatomical_image.png",
+                          package = "mapscape")
+
+ms_sample_ids <- c("H","F","J","D","A","I","C","E","G")
+```
+
+
+## Constructing a ctgPHYLset object
+
+To construct the ctgPHYLset for this vignette, we will create an empty ctgPHYLset and then add in the data loaded in the previous step.
+
+```{r constructctgPHYLset, message=FALSE, warning=FALSE, results='hide', eval=FALSE}
+toyPHYLset <- newctgPHYLset()
+```
+
+
+### Adding Data: cellscape, timescape, and mapscape
+The cellscape, timescape, and mapscape tree methods require properly formatted data.  We can add the example data loaded earlier to our ctgPHYLset.  Because each piece of these data corresponds to a parameter used by one of the packages, when it is added to a ctgPHYLset, the parameter name must be supplied.  Additional details concerning these parameters can be found in the respective package's documentation.
+Note:  Although these some of these data share the same parameter name, these example data are not interchangable.
+
+```{r addEscape, eval=FALSE}
+# store cellscape data
+cellscapeData(toyPHYLset, "clone_colours") <- cs_clone_colours
+cellscapeData(toyPHYLset, "tree_edges") <- cs_tree_edges 
+cellscapeData(toyPHYLset, "cnv_data") <- cs_cnv_data
+cellscapeData(toyPHYLset, "sc_annot") <- cs_sc_annot
+
+# store timescape data
+timescapeData(toyPHYLset, "tree_edges") <- ts_tree_edges
+timescapeData(toyPHYLset, "clonal_prev") <- ts_clonal_prev
+timescapeData(toyPHYLset, "mutations") <- ts_mutations
+timescapeData(toyPHYLset, "perturbations") <- ts_perturbations
+
+# store mapscape data
+mapscapeData(toyPHYLset, "clonal_prev") <- ms_clonal_prev
+mapscapeData(toyPHYLset, "mutations") <- ms_mutations
+mapscapeData(toyPHYLset, "sample_locations") <- ms_sample_locations
+mapscapeData(toyPHYLset, "tree_edges") <- ms_tree_edges
+mapscapeData(toyPHYLset, "img_ref") <- ms_img_ref
+mapscapeData(toyPHYLset, "sample_ids") <- ms_sample_ids
+```
+
+
+#Using ctgPHYL
+
+To use ctgPHYL, call the generate_tree function with the desired tree method and ctgPHYLset object. 
+
+## Using cellscape:
+
+To use our example ctgPHYLset and the cellscape method, we would type the following:
+
+```{r, eval=FALSE}
+toyPHYLset <- generate_tree(dataSet = toyPHYLset, treeType = "cellscape")
+```
+
+This stores the final tree in the originalTrees slot of the ctgPHYLset object.  If the htmlWidgets package is installed, a new folder is created (if necessary), called "CTG-Output", that contains a folder called "Plots" containing an .html file with the final product.  The .html version, like the generated plot, is interactive, but a static version is displayed here.
+
+```{r cellscapePlot, echo=FALSE, out.width = "400px"}
+knitr::include_graphics(file.path("figures", "cellscape.png"))
+```
+
+## Using timescape:
+
+To use our example ctgPHYLset and the timescape method, we would type the following:
+
+```{r, eval=FALSE}
+toyPHYLset <- generate_tree(dataSet = toyPHYLset, treeType = "timescape")
+```
+
+This stores the final tree in the originalTrees slot of the ctgPHYLset object.  If the htmlWidgets package is installed, a new folder is created (if necessary), called "CTG-Output", that contains a folder called "Plots" containing an .html file with the final product.  The .html version, like the generated plot, is interactive, but a static version is displayed here.
+
+```{r timescapePlot, echo=FALSE, out.width = "400px"}
+knitr::include_graphics(file.path("figures", "timescape.png"))
+```
+
+## Using mapscape:
+
+To use our example ctgPHYLset and the mapscape method, we would type the following:
+
+```{r, eval=FALSE}
+toyPHYLset <- generate_tree(dataSet = toyPHYLset, treeType = "mapscape")
+```
+
+This stores the final tree in the originalTrees slot of the ctgPHYLset object.  If the htmlWidgets package is installed, a new folder is created (if necessary), called "CTG-Output", that contains a folder called "Plots" containing an .html file with the final product.  The .html version, like the generated plot, is interactive, but a static version is displayed here.
+
+```{r mapscapePlot, echo=FALSE, out.width = "400px"}
+knitr::include_graphics(file.path("figures", "mapscape.png"))
+```
+
+
+# Replotting Trees
+
+If at some point we wish to view the plot of a tree generated after it's been created, but don't want to have to regenerate it and all its files, ctgPHYL has a method, plotOriginalTree(), that will reproduce a plot stored in a ctgPHYLset object. To use this method, we must know the name of the tree we wish to plot.  We can view the names of the trees in our toyPHYLset using the names() method.
+
+```{r getNames, echo=TRUE, eval=FALSE}
+names(originalTrees(toyPHYLset))
+```
+```{r displayNames, echo=FALSE, message=FALSE, warning=FALSE}
+n <- c("cellscape", "timescape", "mapscape")
+print(n)
+```
+
+Once we have the names, we can choose a tree to plot. Let's plot the "cellTreeTopics" tree again.
+
+```{r plotTree, echo=TRUE, eval=FALSE}
+plotOriginalTree(toyPHYLset, "cellscape")
+```
+
+```{r plotOriginal, echo=FALSE, out.width="400px"}
+knitr::include_graphics(file.path("figures", "cellscape.png"))
+```
+
+Using this method eliminates the need to regenerate the tree to view a plot that was already created, thereby saving time for trees that require extensive computations to generate.
+
+
+# References
+## cellscape
+Maia Smith (2017). cellscape: Explores single cell copy number profiles in the
+context of a single cell tree. R package version 1.0.0.
+
+cellscape package URL:
+https://bioconductor.org/packages/cellscape
+
+## timescape
+Maia Smith (2017). timescape: Patient Clonal Timescapes. R package version
+1.0.0.
+
+timescape package URL:
+https://bioconductor.org/packages/timescape
+
+## mapscape
+Maia Smith (2017). mapscape: mapscape. R package version 1.0.0.
+
+mapscape package URL:
+https://bioconductor.org/packages/mapscape

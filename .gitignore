@@ -1,0 +1,7 @@
+packrat/lib*/
+.Rproj.user
+.Rhistory
+.Rprofile
+ctgPHYL.Rproj
+CTG-Output/
+vignettes/CTG-Output/
