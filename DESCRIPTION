@@ -3,7 +3,7 @@ Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.99.0
 Author: Carrie Minette
-Maintainer: Carrie Minette <bicbioeng@gmail.com>
+Maintainer: USD Biomedical Engineering <bicbioeng@gmail.com>
 Description: This package generates tree visualizations of cell data using a
     variety of tree generation packages.
 VignetteBuilder: knitr
