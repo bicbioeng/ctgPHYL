@@ -165,7 +165,7 @@ mapscapeData(toyPHYLset, "sample_ids") <- ms_sample_ids
 ```
 
 
-#Using ctgPHYL
+# Using ctgPHYL
 
 To use ctgPHYL, call the generate_tree function with the desired tree method and ctgPHYLset object. 
 
