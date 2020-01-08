@@ -1,9 +1,9 @@
 ---
 title: "Using ctgPHYL"
 author: "Carrie Minette"
-date: "May 23, 2019"
+date: "`r Sys.Date()`"
 output:
-  html_document: default
+  html_document: BiocStyle::html_document
   pdf_document: default
 vignette: >
   %\VignetteIndexEntry{ctgPHYL} 
@@ -236,6 +236,10 @@ knitr::include_graphics(file.path("figures", "cellscape.png"))
 
 Using this method eliminates the need to regenerate the tree to view a plot that was already created, thereby saving time for trees that require extensive computations to generate.
 
+# Session Information
+```{r}
+sessionInfo()
+```
 
 # References
 ## cellscape

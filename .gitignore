@@ -5,3 +5,4 @@ packrat/lib*/
 ctgPHYL.Rproj
 CTG-Output/
 vignettes/CTG-Output/
+.RData
