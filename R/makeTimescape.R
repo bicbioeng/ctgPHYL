@@ -72,8 +72,6 @@ makeTimescape <- function(dataSet) {
     filename <- gsub(":", "-", filename)
     filename <- gsub(" ", "_", filename)
 
-    #TODO figure out why this isn't plotting in Rstudio the way it should
-    # probably something to do with usage of htmlwidgets
     # run timescape
     tscape <- timescape::timescape(
         clonal_prev = clonal_prev,
@@ -104,25 +102,20 @@ makeTimescape <- function(dataSet) {
         ))
     }
     # convert data to standard cell tree format
-    #TODO uncomment the following two lines when TS2CTF works
-    # tree <- TS2CTF(output.tree, filename)
-    # treeList(dataSet, "timescape") <- tree2igraph(tree)
+    tree <- TS2CTF(tree_edges, filename)
+    treeList(dataSet, "timescape") <- tree2igraph(tree)
     return(dataSet)
 }
 
 # helper function to convert to SIF format
 TS2CTF <- function(tree, fn) {
-    #TODO Figure out how to convert timescape input to a tree, then how
-    # to convert that tree to igraph and assign it to iTree
-    iTree <- NULL
-    #TODO Determine what type of relationship the nodes in the tree have to
-    # one another
-    relationshipType <- ""
+    iTree <- igraph::graph_from_data_frame(tree)
+    relationshipType <- "heuristic"
     cellEdges <- igraph::ends(iTree, es = igraph::E(iTree))
     relationships <-
         paste0(cellEdges[, 1], '\t', relationshipType, '\t',
-               cellEdges[, 2])
-    fullFileName <- paste0("./CTG-Output/SIFs/", fn, "_CS_CTF.sif")
+                cellEdges[, 2])
+    fullFileName <- paste0("./CTG-Output/SIFs/", fn, "_TS_CTF.sif")
     write(relationships, fullFileName)
     relationships
 }

@@ -25,10 +25,10 @@
 #' @aliases ctgPHYLset-class
 #' @exportClass ctgPHYLset
 setClass( "ctgPHYLset",
-          slots = c(cellscapeData = "list",
+            slots = c(cellscapeData = "list",
                     timescapeData = "list",
                     mapscapeData = "list",
                     treeList = "list",
                     originalTrees = "list"
-          )
+            )
 )

@@ -61,24 +61,31 @@ ctgPHYLset object
 }
 \description{
 These methods operate on ctgPHYLset objects. Please note that
-treeList<- and originalTrees<- are not intended to be
+treeList<- and originalTrees<- are not exported and not intended to be
 called directly.
 }
 \examples{
-\dontrun{
-cellTreeInfo(samplectgPHYLset) <- "Hours"
-cti <- cellTreeInfo(samplectgPHYLset)
-monocleInfo(samplectgPHYLset) <- c("gene_short_name", "MYF5",
-                                     "ANPEP", "FPKM")
-mi <- monocleInfo(samplectgPHYLset)
-TSCANinfo(samplectgPHYLset) <- "ENSG00000000003.10"
-ti <- TSCANinfo(samplectgPHYLset)
-oncoNEMdata(samplectgPHYLset) <- my_snp_matrix
-od <- oncoNEMdata(samplectgPHYLset)
-CanopyData(samplectgPHYLset) <- my_Canopy_Data_list
-cd <- CanopyData(samplectgPHYLset)
-trees <- treeList(samplectgPHYLset)
-originalTrees <- originalTrees(samplectgPHYLset)
-}
+# load data for 'treeType = cellscape'
+cs_tree_edges <- read.csv(system.file("extdata", "cnv_tree_edges.csv",
+                         package = "cellscape"))
+cs_cnv_data <- read.csv(system.file("extdata", "cnv_data.csv",
+                                     package = "cellscape"))
+cs_sc_annot <- read.csv(system.file("extdata", "cnv_annots.tsv",
+                                    package = "cellscape"), sep="\t")
+cs_clone_colours <- data.frame(clone_id = c("1","2","3"),
+                               colour = c("7fc97f", "beaed4", "fdc086"))
+
+# create example ctgPHYLset and load data into it
+ctgPHYLset <- newctgPHYLset()
+cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
+cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
+cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data
+cellscapeData(ctgPHYLset, "sc_annot") <- cs_sc_annot
+
+# run generate_tree()
+ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape")
+
+trees <- treeList(ctgPHYLset)
+originalTrees <- originalTrees(ctgPHYLset)
 }
 \keyword{internal}

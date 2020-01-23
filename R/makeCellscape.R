@@ -237,7 +237,6 @@ makeCellscape <- function(dataSet) {
             )
         }
     }
-
     # store the result, and save the widget as an html file if htmlwidgets is
     # installed
     originalTrees(dataSet, "cellscape") <- cscape
@@ -254,24 +253,19 @@ makeCellscape <- function(dataSet) {
         )
     }
     # convert data to standard cell tree format
-    #TODO uncomment the following two lines when CS2CTF works
-    # tree <- CS2CTF(output.tree, filename)
-    # treeList(dataSet, "cellscape") <- tree2igraph(tree)
+    tree <- CS2CTF(tree_edges, filename)
+    treeList(dataSet, "cellscape") <- tree2igraph(tree)
     return(dataSet)
 }
 
 # helper function to convert to SIF format
 CS2CTF <- function(tree, fn) {
-    #TODO Figure out how to convert cellscape input to a tree, then how
-    # to convert that tree to igraph and assign it to iTree
-    iTree <- NULL
-    #TODO Determine what type of relationship the nodes in the tree have to
-    # one another
-    relationshipType <- ""
+    iTree <- igraph::graph_from_data_frame(tree)
+    relationshipType <- "heuristic"
     cellEdges <- igraph::ends(iTree, es = igraph::E(iTree))
     relationships <-
         paste0(cellEdges[, 1], '\t', relationshipType, '\t',
-               cellEdges[, 2])
+                cellEdges[, 2])
     fullFileName <- paste0("./CTG-Output/SIFs/", fn, "_CS_CTF.sif")
     write(relationships, fullFileName)
     relationships

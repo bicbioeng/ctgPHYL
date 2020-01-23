@@ -7,8 +7,13 @@
 newctgPHYLset()
 }
 \value{
-a new ctgPHYLset object
+a new, empty ctgPHYLset object to store parameters, inputs, and
+outputs
 }
 \description{
 Creates a new ctgPHYLset object.
+}
+\examples{
+# create example ctgPHYLset
+ctgPHYLset <- newctgPHYLset()
 }

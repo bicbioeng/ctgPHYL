@@ -11,7 +11,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # load data for cellscape
 #' cs_tree_edges <- read.csv(system.file("extdata", "cnv_tree_edges.csv",
 #'                          package = "cellscape"))
@@ -21,15 +20,21 @@
 #'                                     package = "cellscape"), sep="\t")
 #' cs_clone_colours <- data.frame(clone_id = c("1","2","3"),
 #'                                colour = c("7fc97f", "beaed4", "fdc086"))
+#' # create example ctgPHYLset and load data into it
+#' ctgPHYLset <- newctgPHYLset()
+#' cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
+#' cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
+#' cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data
+#' cellscapeData(ctgPHYLset, "sc_annot") <- cs_sc_annot
+#'
 #' # run generate_tree()
-#' toyPHYLset <- generate_tree(dataSet = toyPHYLset, treeType = "cellscape")
+#' ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape")
 #'
 #' # view names of original trees
-#' names(originalTrees(toyPHYLset))
+#' names(originalTrees(ctgPHYLset))
 #'
 #' # plot original trees
-#' plotOriginalTree(toyPHYLset, "cellscape")
-#' }
+#' plotOriginalTree(ctgPHYLset, "cellscape")
 
 plotOriginalTree <- function(dataSet, treeType) {
     stopifnot(is(dataSet, "ctgPHYLset"))
@@ -39,8 +44,6 @@ plotOriginalTree <- function(dataSet, treeType) {
     # ANY CHANGES MADE IN THE FOLLOWING CODE MUST BE CHECKED FOR
     # COMPATIBILITY WITH THEIR RESPECTIVE make METHODS
 
-    #TODO figure out why this isn't plotting in Rstudio the way it should
-    # probably something to do with usage of htmlwidgets
     if (grepl("scape", treeType)) {
         treeData
     }

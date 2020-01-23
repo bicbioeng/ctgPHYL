@@ -11,7 +11,7 @@ tree2igraph <- function(relationships) {
     # related items and column 2 being the relationship type
     relationshipsMatrix <-
         matrix(unlist(strsplit(relationships, "\t")),
-               ncol = 3, byrow = TRUE)
+                ncol = 3, byrow = TRUE)
     # extract the relationship types from the matrix
     relationshipTypes <- relationshipsMatrix[, -c(1, 3)]
     # extract the related items into a vector by row
@@ -20,7 +20,7 @@ tree2igraph <- function(relationships) {
     vertexIDs <- unique(relatedItems)
     # identify the related items by number instead of name
     relatedIDs <- vector(mode = "integer")
-    for (i in 1:length(relatedItems)) {
+    for (i in seq_len(length(relatedItems))) {
         relatedIDs <-
             append(relatedIDs, which(vertexIDs %in% relatedItems[i]))
     }

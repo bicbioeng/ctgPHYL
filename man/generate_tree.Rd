@@ -26,8 +26,7 @@ See vignette for examples, usage details, and instructions on building a
 ctgPHYLset object.
 }
 \examples{
-\dontrun{
-# load data for cellscape
+# load data for 'treeType = cellscape'
 cs_tree_edges <- read.csv(system.file("extdata", "cnv_tree_edges.csv",
                          package = "cellscape"))
 cs_cnv_data <- read.csv(system.file("extdata", "cnv_data.csv",
@@ -36,7 +35,14 @@ cs_sc_annot <- read.csv(system.file("extdata", "cnv_annots.tsv",
                                     package = "cellscape"), sep="\t")
 cs_clone_colours <- data.frame(clone_id = c("1","2","3"),
                                colour = c("7fc97f", "beaed4", "fdc086"))
+
+# create example ctgPHYLset and load data into it
+ctgPHYLset <- newctgPHYLset()
+cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
+cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
+cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data
+cellscapeData(ctgPHYLset, "sc_annot") <- cs_sc_annot
+
 # run generate_tree()
 ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape")
-}
 }
