@@ -1,6 +1,6 @@
 Package: ctgPHYL
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Package for Single-cell Data Visualization and Analysis
 Version: 0.99.0
 Author: Carrie Minette
 Maintainer: USD Biomedical Engineering <bicbioeng@gmail.com>
