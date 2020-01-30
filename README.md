@@ -4,6 +4,6 @@ trees with these packages using one function call with a single dataset and
 the desired visualization package name as a parameter. 
 Currently supported packages are:
 
-- [timescape](bioconductor.org/packages/release/bioc/html/timescape.html)
+- [timescape](http://bioconductor.org/packages/release/bioc/html/timescape.html)
 - [cellscape](http://bioconductor.org/packages/release/bioc/html/cellscape.html)
 - [mapscape](http://bioconductor.org/packages/release/bioc/html/mapscape.html)
