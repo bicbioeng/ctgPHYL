@@ -4,12 +4,15 @@
 \alias{generate_tree}
 \title{Function to Generate Cell Trees}
 \usage{
-generate_tree(dataSet, treeType)
+generate_tree(dataSet, treeType, outputDir = getwd())
 }
 \arguments{
 \item{dataSet}{the ctgPHYLset object for creating the cell tree}
 
 \item{treeType}{the type of tree generated}
+
+\item{outputDir}{the directory where output should be saved, defaults to
+the current working directory.}
 }
 \value{
 An updated ctgPHYLset object.  The generated tree is placed in
@@ -37,12 +40,15 @@ cs_clone_colours <- data.frame(clone_id = c("1","2","3"),
                                colour = c("7fc97f", "beaed4", "fdc086"))
 
 # create example ctgPHYLset and load data into it
-ctgPHYLset <- newctgPHYLset()
+ctgPHYLset <- ctgPHYLset()
 cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
 cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
 cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data
 cellscapeData(ctgPHYLset, "sc_annot") <- cs_sc_annot
 
+# choose output directory
+od <- getwd()
 # run generate_tree()
-ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape")
+ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape", 
+                             outputDir = od)
 }

@@ -4,20 +4,12 @@
 #' using the data and \pkg{cellscape}.
 #'
 #' @param dataSet a ctgPHYLset object
+#' @param outputDir the directory where output should be saved, defaults to
+#' the current working directory.
 #' @return an updated ctgPHYLset object
 #' @keywords internal
 
-makeCellscape <- function(dataSet) {
-    # check if package is installed
-    if (!requireNamespace("cellscape", quietly = TRUE)) {
-        stop(
-            "Package 'cellscape' is required for treeType = 'cellscape',
-            but is not installed.  See vignette for details on installing
-            'cellscape'",
-            call. = FALSE
-        )
-    }
-
+makeCellscape <- function(dataSet, outputDir = ".") {
     # retrieve cellscape data (returns NULL if nothing there)
     scapedata <- cellscapeData(dataSet)
     # retrieve optional parameters that have default values
@@ -93,10 +85,7 @@ makeCellscape <- function(dataSet) {
         height <- 800
 
     #format the filename
-    filename <- as.character(Sys.time())
-    filename <- gsub("/", "-", filename)
-    filename <- gsub(":", "-", filename)
-    filename <- gsub(" ", "_", filename)
+    filename <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 
     #TODO figure out why this isn't plotting in Rstudio the way it should
     # probably something to do with usage of htmlwidgets
@@ -244,7 +233,7 @@ makeCellscape <- function(dataSet) {
         htmlwidgets::saveWidget(
             cscape,
             file = file.path(
-                getwd(),
+                outputDir,
                 "CTG-Output",
                 "Plots",
                 paste0(filename, "cellscape.html")
@@ -253,20 +242,21 @@ makeCellscape <- function(dataSet) {
         )
     }
     # convert data to standard cell tree format
-    tree <- CS2CTF(tree_edges, filename)
+    tree <- CS2CTF(tree_edges, filename, outputDir)
     treeList(dataSet, "cellscape") <- tree2igraph(tree)
     return(dataSet)
 }
 
 # helper function to convert to SIF format
-CS2CTF <- function(tree, fn) {
+CS2CTF <- function(tree, fn, od = ".") {
     iTree <- igraph::graph_from_data_frame(tree)
     relationshipType <- "heuristic"
     cellEdges <- igraph::ends(iTree, es = igraph::E(iTree))
     relationships <-
         paste0(cellEdges[, 1], '\t', relationshipType, '\t',
                 cellEdges[, 2])
-    fullFileName <- paste0("./CTG-Output/SIFs/", fn, "_CS_CTF.sif")
-    write(relationships, fullFileName)
+    fileName <- file.path(od,"CTG-Output","SIFs",
+                          paste0(fn,"_CS_CTF.sif"))
+    write(relationships, fileName)
     relationships
 }

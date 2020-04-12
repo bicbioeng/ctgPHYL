@@ -15,15 +15,15 @@
 \alias{originalTrees<-}
 \title{Methods for the ctgPHYLset class}
 \usage{
-cellscapeData(cs)
+cellscapeData(cs, pt = NULL)
 
 cellscapeData(cs, pt) <- value
 
-timescapeData(cs)
+timescapeData(cs, pt = NULL)
 
 timescapeData(cs, pt) <- value
 
-mapscapeData(cs)
+mapscapeData(cs, pt = NULL)
 
 mapscapeData(cs, pt) <- value
 
@@ -76,7 +76,7 @@ cs_clone_colours <- data.frame(clone_id = c("1","2","3"),
                                colour = c("7fc97f", "beaed4", "fdc086"))
 
 # create example ctgPHYLset and load data into it
-ctgPHYLset <- newctgPHYLset()
+ctgPHYLset <- ctgPHYLset()
 cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
 cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
 cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data

@@ -7,6 +7,8 @@
 #' ctgPHYLset object.
 #' @param dataSet the ctgPHYLset object for creating the cell tree
 #' @param treeType the type of tree generated
+#' @param outputDir the directory where output should be saved, defaults to
+#' the current working directory.
 #' @return An updated ctgPHYLset object.  The generated tree is placed in
 #'     \code{@@treeList[treeType]} slot, and can be accessed via
 #'     \code{treeList(dataSet)$treeType}.  The function also creates a
@@ -26,31 +28,34 @@
 #'                                colour = c("7fc97f", "beaed4", "fdc086"))
 #'
 #' # create example ctgPHYLset and load data into it
-#' ctgPHYLset <- newctgPHYLset()
+#' ctgPHYLset <- ctgPHYLset()
 #' cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
 #' cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
 #' cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data
 #' cellscapeData(ctgPHYLset, "sc_annot") <- cs_sc_annot
 #'
+#' # choose output directory
+#' od <- getwd()
 #' # run generate_tree()
-#' ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape")
+#' ctgPHYLset <- generate_tree(dataSet = ctgPHYLset, treeType = "cellscape", 
+#'                              outputDir = od)
 
-generate_tree <- function(dataSet, treeType) {
+generate_tree <- function(dataSet, treeType, outputDir = getwd()) {
     stopifnot(is(dataSet, "ctgPHYLset"))
     # get the matrix containing packages and corresponding functions
     method_matrix <- make_method_matrix()
     # find the correct package to use
     pack <- which(method_matrix[1,] == treeType)
-    # create a directory and subdirectories for output, if they doesn't exist
-    if (!utils::file_test(op = "-d", "./CTG-Output")) {
-        dir.create("./CTG-Output")
-        dir.create("./CTG-Output/Plots")
-        dir.create("./CTG-Output/SIFs")
+    # create a directory and subdirectories for output, if they don't exist
+    if(!dir.exists(file.path(outputDir,"CTG-Output"))){
+        dir.create(file.path(outputDir,"CTG-Output"))
+        dir.create(file.path(outputDir,"CTG-Output","Plots"))
+        dir.create(file.path(outputDir,"CTG-Output","SIFs"))
     }
     # get the corresponding function
     func <- get(method_matrix[2, pack])
     # execute the function
-    dataSet <- func(dataSet)
+    dataSet <- func(dataSet, outputDir)
     dataSet
 }
 

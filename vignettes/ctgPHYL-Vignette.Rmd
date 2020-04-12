@@ -17,16 +17,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-ctgPHYL is an R package that combines a variety of visualization packages. By 
-installing this package, users have a streamlined, simplified way to build 
-trees with these packages using one function call with a single dataset and 
-the desired visualization package name as a parameter. 
-Currently supported packages are:
-
-- timescape
-- cellscape
-- mapscape
-
+There are a number of R packages that exist for visualization of phylogenetic data. 
+Each of these packages have unique inputs, outputs, and visualization schemes, which makes 
+cross-comparison between methods time-consuming. ctgPHYL is an R package that streamlines the
+building of phylogenetic trees across multiple existing tools, using a unified output for improved 
+comparability and reproducibility. Results are stored in the SIF file 
+format for use in downstream analysis workflows or as input into Cytoscape. Currently supports 
+tools from `r Biocpkg("cellscape")`,`r Biocpkg("timescape")`, and `r Biocpkg("mapscape")`. 
 
 # Installing ctgPHYL
 
@@ -42,22 +39,15 @@ install.packages("htmlwidgets")
 
 ## Installing Bioconductor and the ctgPHYL package
 
-ctgPHYL requires Bioconductor 3.12 or higher.  For more information on 
+ctgPHYL requires the most recent version of Bioconductor.  For more information on 
 Bioconductor, please see their website at https://bioconductor.org.  To install
 Bioconductor and ctgPHYL, run the following commands:
 
 ```{r, eval=FALSE}
-# For R version >= 3.5
+# For R version >= 4.0
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("ctgPHYL")
-```
-
-Once Bioconductor is installed, it can be used to install some of the other 
-packages needed for this vignette, as follows:
-
-```{r, eval=FALSE}
-BiocManager::install(c("cellscape", "timescape", "mapscape"))
 ```
 
 After installing, attach the ctgPHYL package with the following command:
@@ -77,8 +67,9 @@ vignette can be found in the following section.
 
 A ctgPHYLset object that will support all of the tree types in the ctgPHYL 
 requires a variety of data types, as each tree type has specific requirements.
-For this vignette, we will construct a toy object, using examples provided in 
-the vignettes for each tree package.  Note that these data do not necessarily 
+For this vignette, we will construct a toy object using examples provided in 
+the vignettes for each tree package.  This will include single-cell copy-number 
+variation and targeted mutation data. Note that these data do not necessarily 
 correlate to one another in any way and are strictly for example purposes. 
 
 ```{r loadRaw, message=FALSE, warning=FALSE, results='hide'}
@@ -130,7 +121,7 @@ To construct the ctgPHYLset for this vignette, we will create an empty
 ctgPHYLset and then add in the data loaded in the previous step.
 
 ```{r constructctgPHYLset, message=FALSE, warning=FALSE, results='hide'}
-toyPHYLset <- newctgPHYLset()
+toyPHYLset <- ctgPHYLset()
 ```
 
 
@@ -170,7 +161,9 @@ mapscapeData(toyPHYLset, "sample_ids") <- ms_sample_ids
 # Using ctgPHYL
 
 To use ctgPHYL, call the generate_tree function with the desired tree method 
-and ctgPHYLset object. 
+and ctgPHYLset object. The user can specify the desired output
+directory using the 'outputDir' parameter or use the default, which is the
+current working directory returned by getwd().
 
 ## Using cellscape:
 

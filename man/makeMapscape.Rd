@@ -4,10 +4,13 @@
 \alias{makeMapscape}
 \title{A Cell Tree Generating Function using mapscape}
 \usage{
-makeMapscape(dataSet)
+makeMapscape(dataSet, outputDir = ".")
 }
 \arguments{
 \item{dataSet}{a ctgPHYLset object}
+
+\item{outputDir}{the directory where output should be saved, defaults to
+the current working directory.}
 }
 \value{
 an updated ctgPHYLset object

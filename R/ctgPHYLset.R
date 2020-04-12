@@ -5,8 +5,8 @@
 #' @export
 #' @examples
 #' # create example ctgPHYLset
-#' ctgPHYLset <- newctgPHYLset()
-newctgPHYLset <- function()
+#' ctgPHYLset <- ctgPHYLset()
+ctgPHYLset <- function()
 {
     cs <- new("ctgPHYLset")
 

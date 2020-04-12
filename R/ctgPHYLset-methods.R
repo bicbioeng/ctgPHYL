@@ -37,7 +37,7 @@
 #'                                colour = c("7fc97f", "beaed4", "fdc086"))
 #'
 #' # create example ctgPHYLset and load data into it
-#' ctgPHYLset <- newctgPHYLset()
+#' ctgPHYLset <- ctgPHYLset()
 #' cellscapeData(ctgPHYLset, "clone_colours") <- cs_clone_colours
 #' cellscapeData(ctgPHYLset, "tree_edges") <- cs_tree_edges
 #' cellscapeData(ctgPHYLset, "cnv_data") <- cs_cnv_data
@@ -54,9 +54,13 @@ NULL
 #' @aliases ctgPHYLset,ANY,ANY-method
 #' @export
 
-cellscapeData <- function(cs) {
+cellscapeData <- function(cs, pt = NULL) {
     stopifnot(is(cs, "ctgPHYLset"))
-    cs@cellscapeData
+    if(is.null(pt)){
+        cs@cellscapeData
+    } else {
+        cs@cellscapeData[[pt]]
+    }
 }
 
 #' @rdname ctgPHYLset-methods
@@ -66,17 +70,32 @@ cellscapeData <- function(cs) {
 
 `cellscapeData<-` <- function(cs, pt, value) {
     stopifnot(is(cs, "ctgPHYLset"))
-    cs@cellscapeData[[pt]] <- value
-    cs
+    params <- c("clone_colours","timepoint_title","clone_title","xaxis_title","yaxis_title",
+                "phylogeny_title","node_type","display_node_ids","prop_of_clone_threshold",
+                "vaf_threshold","show_warnings","width","height","cnv_data","mut_data",
+                "mut_data_matrix","mut_order","tree_edges","gtype_tree_edges","sc_annot",
+                "value_type")
+    test_pt <- match(pt,params)
+    if(is.na(test_pt)){
+        warning(paste0("Entry ",pt," not a cellscape parameter. Check vignette for details."))
+        cs
+    } else {
+        cs@cellscapeData[[pt]] <- value
+        cs   
+    }
 }
 
 #' @rdname ctgPHYLset-methods
 #' @aliases ctgPHYLset,ANY,ANY-method
 #' @export
 
-timescapeData <- function(cs) {
+timescapeData <- function(cs, pt = NULL) {
     stopifnot(is(cs, "ctgPHYLset"))
-    cs@timescapeData
+    if(is.null(pt)){
+        cs@timescapeData
+    } else {
+        cs@timescapeData[[pt]]
+    }
 }
 
 #' @rdname ctgPHYLset-methods
@@ -86,17 +105,30 @@ timescapeData <- function(cs) {
 
 `timescapeData<-` <- function(cs, pt, value) {
     stopifnot(is(cs, "ctgPHYLset"))
-    cs@timescapeData[[pt]] <- value
-    cs
+    params <- c("mutations","clone_colours","xaxis_title","yaxis_title","phylogeny_title",
+                "alpha","genotype_position","perturbations","sort","show_warnings","width",
+                "height","clonal_prev","tree_edges")
+    test_pt <- match(pt,params)
+    if(is.na(test_pt)){
+        warning(paste0("Entry ",pt," not a timescape parameter. Check vignette for details."))
+        cs
+    } else {
+        cs@timescapeData[[pt]] <- value
+        cs
+    }
 }
 
 #' @rdname ctgPHYLset-methods
 #' @aliases ctgPHYLset,ANY,ANY-method
 #' @export
 
-mapscapeData <- function(cs) {
+mapscapeData <- function(cs, pt = NULL) {
     stopifnot(is(cs, "ctgPHYLset"))
-    cs@mapscapeData
+    if(is.null(pt)){
+        cs@mapscapeData
+    } else {
+        cs@mapscapeData[[pt]]
+    }
 }
 
 #' @rdname ctgPHYLset-methods
@@ -106,8 +138,19 @@ mapscapeData <- function(cs) {
 
 `mapscapeData<-` <- function(cs, pt, value) {
     stopifnot(is(cs, "ctgPHYLset"))
-    cs@mapscapeData[[pt]] <- value
-    cs
+    params <- c("clone_colours","mutations","sample_ids","n_cells",
+                "show_low_prev_gtypes","phylogeny_title","anatomy_title",
+                "classification_title","show_warnings","width","height",
+                "clonal_prev", "tree_edges","sample_locations","img_ref")
+    test_pt <- match(pt,params)
+    if(is.na(test_pt)){
+        warning(paste0("Entry ",pt," not a mapscape parameter. 
+                       Check vignette for details."))
+        cs
+    } else {
+        cs@mapscapeData[[pt]] <- value
+        cs
+    }
 }
 
 #' @rdname ctgPHYLset-methods

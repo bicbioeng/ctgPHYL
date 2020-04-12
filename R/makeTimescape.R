@@ -4,20 +4,12 @@
 #' using the data and \pkg{timescape}.
 #'
 #' @param dataSet a ctgPHYLset object
+#' @param outputDir the directory where output should be saved, defaults to
+#' the current working directory.
 #' @return an updated ctgPHYLset object
 #' @keywords internal
 
-makeTimescape <- function(dataSet) {
-    # check if package is installed
-    if (!requireNamespace("timescape", quietly = TRUE)) {
-        stop(
-            "Package 'timescape' is required for treeType = 'timescape',
-            but is not installed.  See vignette for details on installing
-            'timescape'",
-            call. = FALSE
-        )
-    }
-
+makeTimescape <- function(dataSet, outputDir = ".") {
     # retrieve timescape data (returns NULL if nothing there)
     scapedata <- timescapeData(dataSet)
     # retrieve optional parameters that have default values
@@ -67,10 +59,7 @@ makeTimescape <- function(dataSet) {
         tree_edges <- NULL
 
     #format the filename
-    filename <- as.character(Sys.time())
-    filename <- gsub("/", "-", filename)
-    filename <- gsub(":", "-", filename)
-    filename <- gsub(" ", "_", filename)
+    filename <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
 
     # run timescape
     tscape <- timescape::timescape(
@@ -95,27 +84,28 @@ makeTimescape <- function(dataSet) {
     originalTrees(dataSet, "timescape") <- tscape
     if (requireNamespace("htmlwidgets", quietly = TRUE)) {
         htmlwidgets::saveWidget(tscape, file = file.path(
-            getwd(),
+            outputDir,
             "CTG-Output",
             "Plots",
             paste0(filename, "timescape.html")
         ))
     }
     # convert data to standard cell tree format
-    tree <- TS2CTF(tree_edges, filename)
+    tree <- TS2CTF(tree_edges, filename, outputDir)
     treeList(dataSet, "timescape") <- tree2igraph(tree)
     return(dataSet)
 }
 
 # helper function to convert to SIF format
-TS2CTF <- function(tree, fn) {
+TS2CTF <- function(tree, fn, od = ".") {
     iTree <- igraph::graph_from_data_frame(tree)
     relationshipType <- "heuristic"
     cellEdges <- igraph::ends(iTree, es = igraph::E(iTree))
     relationships <-
         paste0(cellEdges[, 1], '\t', relationshipType, '\t',
                 cellEdges[, 2])
-    fullFileName <- paste0("./CTG-Output/SIFs/", fn, "_TS_CTF.sif")
-    write(relationships, fullFileName)
+    fileName <- file.path(od,"CTG-Output","SIFs",
+                              paste0(fn,"_TS_CTF.sif"))
+    write(relationships, fileName)
     relationships
 }

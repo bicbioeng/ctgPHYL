@@ -1,25 +1,28 @@
 Package: ctgPHYL
 Type: Package
 Title: Package for Single-cell Data Visualization and Analysis
-Version: 0.99.0
+Version: 0.99.1
 Author: Carrie Minette
 Maintainer: USD Biomedical Engineering <bicbioeng@gmail.com>
-Description: This package generates tree visualizations of cell data using a
-    variety of tree generation packages.
+Description: This package streamlines the building of cell-tree visualizations from 
+    single-cell phylogenetic data using a variety of existing packages for improved
+    comparability and reproducibility. Currently supports tools from cellscape, mapscape, 
+    and timescape, and provides a unified output format for integration with downstream 
+    data analysis workflows and Cytoscape.
 VignetteBuilder: knitr
 License: GPL(>=2)
 Encoding: UTF-8
 LazyData: true
-biocViews: Software, Visualization
-RoxygenNote: 7.0.2
+biocViews: Software, Visualization, Phylogenetics
+RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Imports:
     igraph,
-    methods
-Suggests:
-    BiocStyle,
+    methods,
     cellscape,
     htmlwidgets,
-    knitr,
     mapscape,
     timescape
+Suggests:
+    BiocStyle,
+    knitr
